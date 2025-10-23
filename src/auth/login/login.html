@@ -47,30 +47,46 @@
             background-color: #b07214b2;
         }
 
+        .dropdown select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: none;
+            margin-bottom: 15px;
+        }
+        .linkregistro {
+            color: rgb(58, 15, 2);
+            text-decoration: none;
+            font-weight: bold;
+
+        }
+
     </style>
 </head>
 
 <body class="body-login">
     <form action="" method="POST" class="card-custom mx-auto mt-5 ">
+        <h2>Login</h2>
         <div class="mb-3 mt-3">
-            <label for="email" class="form-label">Email:</label>
-            <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+            <label for="username" class="form-label">Username:</label>
+            <input type="text" class="form-control" id="username" placeholder="Enter username" name="username">
         </div>
         <div class="mb-3">
-            <label for="pwd" class="form-label">Contraseña:</label>
-            <input type="password" class="form-control" id="pwd" placeholder="Enter Contraseña" name="pswd">
+            <label for="password" class="form-label">Contraseña:</label>
+            <input type="password" class="form-control" placeholder="Enter Contraseña" name="password">
         </div>
-        <div class="dropdown mb-3">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
-                Seleccione Rol
-            </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="../../admin/adminHome/adminHome.html">Administrador</a></li>
-                <li><a class="dropdown-item" href="../../client/orders/orders.html">Usuario</a></li>
-            </ul>
-</div>
+        <label class="dropdown mb-3">Rol:
+            <select id="role" required>
+                <option value="admin">Admin</option>
+                <option value="client">Cliente</option>
+            </select>
         <button type="submit" class="btn btn-dark ">Entrar</button>
     </form>
+    <li class="text-center mt-3 " style="list-style-type: none;">
+        <p>¿no tenes cuenta?  <a class="linkregistro" href="../register/register.html">Registrarse</a></p>
+    </li>
+    <script type="module" src="./login.ts"></script>
+    
 </body>
 
 </html>

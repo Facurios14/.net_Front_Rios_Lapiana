@@ -1,35 +1,50 @@
 export {}; 
 const form = document.getElementById("loginForm") as HTMLFormElement;
 
-form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+if (form) {
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-    const username = (document.getElementById("username") as HTMLInputElement).value;
-    const password = (document.getElementById("password") as HTMLInputElement).value;
+        const usernameInput = document.getElementById("username") as HTMLInputElement;
+        const passwordInput = document.getElementById("password") as HTMLInputElement;
+        const roleSelect = document.getElementById("role") as HTMLSelectElement;
 
-    const response = await fetch("http://localhost:8080/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-    });
-
-    if (response.ok) {
-        const user = await response.json();
-
-        // Guardamos el usuario en localStorage (sin la contraseña)
-        localStorage.setItem("user", JSON.stringify(user));
-
-        alert(`Bienvenido ${user.username}`);
-        if (user.role === "admin") {
-            console.log("Redirigiendo a admin.html");
-            /* window.location.href = "admin.html"; */
-        } else {
-            console.log("Redirigiendo a client.html");
-            /* window.location.href = "client.html"; */
+        if (!usernameInput || !passwordInput || !roleSelect) {
+            console.error("Faltan elementos en el formulario");
+            alert("Error interno: faltan campos en el formulario");
+            return;
         }
-    } else {
-        const error = await response.text();
-        alert(`Error: ${error}`);
-    }
-});
+
+        const username = usernameInput.value;
+        const password = passwordInput.value;
+        const role = roleSelect.value;
+
+        try {
+            const res = await fetch("http://localhost:8080/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password, role }),
+            });
+
+            if (res.ok) {
+                const user = await res.json();
+                localStorage.setItem("user", JSON.stringify(user));
+                alert("Login exitoso");
+
+                if (role === "ADMIN") {
+                    window.location.href = "../../admin/adminHome/adminHome.html";
+                } else {
+                    window.location.href = "cliente.html";
+                }
+            } else {
+                alert("Credenciales incorrectas");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Error al conectar con el servidor");
+        }
+    });
+} else {
+    console.error("Formulario no encontrado");
+}
 

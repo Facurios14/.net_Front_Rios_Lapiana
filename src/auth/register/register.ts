@@ -1,4 +1,6 @@
 export {};
+const API_URL = import.meta.env.VITE_API_URL;
+
 const form = document.getElementById("registerForm") as HTMLFormElement;
 
 form.addEventListener("submit", async (e) => {
@@ -8,7 +10,7 @@ form.addEventListener("submit", async (e) => {
     const password = (document.getElementById("password") as HTMLInputElement).value;
     const role = (document.getElementById("role") as HTMLSelectElement).value;
 
-    const response = await fetch("http://localhost:8080/api/auth/register", {
+    const response = await fetch(`${API_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password, role }),

@@ -22,10 +22,15 @@
             <label for="password" class="form-label">Contraseña:</label>
             <input id="password" type="password" class="form-control" placeholder="Enter Contraseña" name="password">
         </div>
-        <button type="submit" class="btn btn-dark ">Entrar</button>
-        <li class="text-center mt-3 " style="list-style-type: none;">
+        <label class="dropdown mb-3">Rol:
+            <select id="role" required>
+                <option value="admin">Admin</option>
+                <option value="client">Cliente</option>
+            </select>
+            <li class="text-center mt-3 " style="list-style-type: none;">
             <p>¿no tenes cuenta?  <a class="linkregistro" href="../register/register.html">Registrarse</a></p>
-        </li>
+            </li>
+            <button type="submit" class="btn btn-dark ">Entrar</button>
     </form>
     <script type="module" src="./login.ts"></script>
     

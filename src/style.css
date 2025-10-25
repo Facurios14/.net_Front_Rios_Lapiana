@@ -1,7 +1,7 @@
 * {
     box-sizing: border-box;
-    padding: 0%;
-    margin: 0%;
+    padding: 0;
+    margin: 0;
 }
 
 /* carpeta auth login y registro */
@@ -29,12 +29,14 @@
 }
 
 .btn {
-    color: white;
+    color:rgba(255, 255, 255, 0.856);
     width: 50%;
     text-align: center;
     border: none;
     border-radius: 6px;
     padding: 10px;
+    background-color: #d17e14b2;
+    font-weight: bold;
 }
 
 .btn:hover {
@@ -53,5 +55,4 @@
     color: rgb(58, 15, 2);
     text-decoration: none;
     font-weight: bold;
-
 }

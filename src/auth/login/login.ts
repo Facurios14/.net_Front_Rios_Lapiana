@@ -8,31 +8,28 @@ if (form) {
 
         const usernameInput = document.getElementById("username") as HTMLInputElement;
         const passwordInput = document.getElementById("password") as HTMLInputElement;
-        const roleSelect = document.getElementById("role") as HTMLSelectElement;
-
-        if (!usernameInput || !passwordInput || !roleSelect) {
+        
+        if (!usernameInput || !passwordInput) {
             console.error("Faltan elementos en el formulario");
             alert("Error interno: faltan campos en el formulario");
             return;
         }
-
         const username = usernameInput.value;
         const password = passwordInput.value;
-        const role = roleSelect.value;
 
         try {
             const res = await fetch(`${API_URL}/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password, role }),
+                body: JSON.stringify({ username, password }),
             });
 
             if (res.ok) {
-                const user = await res.json();
+                const user = await res.json(); 
                 localStorage.setItem("user", JSON.stringify(user));
                 alert("Login exitoso");
-
-                if (role === "ADMIN") {
+                /* mayusculas por que no lo distinguia */
+                if (user.role.toUpperCase() === "ADMIN") {
                     window.location.href = "../../admin/adminHome/adminHome.html";
                 } else {
                     window.location.href = "cliente.html";
@@ -48,4 +45,3 @@ if (form) {
 } else {
     console.error("Formulario no encontrado");
 }
-

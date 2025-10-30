@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-M">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Producto</title>
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+    <header id="navbar-placeholder"></header>
+
+    <div class="container product-detail-container" id="product-loader">
+        Cargando producto...
+    </div>
+
+    <div class="container product-detail-container" id="product-content" style="display: none;">
+
+        <div class="product-detail-image">
+            <img id="product-image" src="" alt="Imagen del producto">
+        </div>
+
+        <div class="product-detail-info">
+            <h2 id="product-name">Nombre del Producto</h2>
+
+            <span id="product-status" class="badge"></span>
+
+            <p id="product-desc">Descripción larga del producto...</p>
+
+            <p id="product-stock" class="stock-info">Stock: </p>
+
+            <p id="product-price" class="price-info">$0.00</p>
+
+            <div class="quantity-selector">
+                <button id="quantity-decrease" class="btn btn-secondary">-</button>
+                <input type="number" id="quantity-input" value="1" min="1">
+                <button id="quantity-increase" class="btn btn-secondary">+</button>
+            </div>
+
+            <button id="add-to-cart-btn" class="btn btn-primary">Agregar al Carrito</button>
+
+            <p id="confirm-message" class="confirm-text"></p>
+
+            <button id="back-btn" class="btn btn-link">← Volver al catálogo</button>
+        </div>
+    </div>
+
+    <script type="module" src="productDetail.ts"></script>
+</body>
+
+</html>

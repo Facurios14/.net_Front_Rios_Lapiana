@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Categorías</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+
+<body class="body-admin">
+    <h1>Gestión de Categorías</h1>
+
+    <form id="categoryForm">
+        <input type="hidden" id="categoryId" />
+        <input type="text" id="name" placeholder="Nombre de la categoría" required />
+        <button type="submit">Guardar</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="categoriesTable"></tbody>
+    </table>
+
+    <button onclick="window.location.href='../adminHome/adminHome.html'">Volver</button>
+
+    <script type="module" src="categories.ts"></script>
+</body>
+
+</html>

@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Panel de Administración</title>
+    <link rel="stylesheet" href="../../style.css">
 </head>
+
 <body>
-    <h1>Entraste como Admin Home</h1>
+    <div class="dashboard">
+        <h1>Panel de Administración</h1>
+        <nav>
+            <button onclick="window.location.href='../categories/categories.html'">Categorías</button>
+            <button onclick="window.location.href='../products/products.html'">Productos</button>
+            <button id="logoutBtn">Cerrar sesión</button>
+        </nav>
+    </div>
+    <script type="module" src="adminHome.ts"></script>
 </body>
+
 </html>

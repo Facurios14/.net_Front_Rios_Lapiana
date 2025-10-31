@@ -1,7 +1,10 @@
 export {}; 
+import { checkAuth, logout } from "../../utils/auth";
 
-const API_URL = "http://localhost:8080/api/products";
-const CATEGORY_URL = "http://localhost:8080/api/categories";
+checkAuth("admin");
+
+const API_URL = import.meta.env.VITE_API_URL_PRODUCTS;
+const CATEGORY_URL = import.meta.env.VITE_API_URL_CATEGORIES;
 
 const form = document.getElementById("productForm") as HTMLFormElement;
 const tableBody = document.querySelector("#productTable tbody") as HTMLElement;
@@ -10,8 +13,13 @@ const idInput = document.getElementById("id") as HTMLInputElement;
 const nameInput = document.getElementById("name") as HTMLInputElement;
 const priceInput = document.getElementById("price") as HTMLInputElement;
 const categorySelect = document.getElementById("category") as HTMLSelectElement;
+const logoutBtn = document.getElementById("logoutBtn") as HTMLButtonElement;
 
-// 🟩 Cargar categorías en el select
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", logout);
+}
+
+// Cargar categorías en el select
 async function loadCategories() {
     try {
         const res = await fetch(CATEGORY_URL);
@@ -29,7 +37,7 @@ async function loadCategories() {
     }
 }
 
-// 🟦 Cargar productos en la tabla
+// Cargar productos en la tabla
 async function loadProducts() {
     try {
         const res = await fetch(API_URL);
@@ -44,8 +52,8 @@ async function loadProducts() {
         <td>${p.price}</td>
         <td>${p.category?.name || "Sin categoría"}</td>
         <td>
-            <button onclick="editProduct(${p.id}, '${p.name}', ${p.price}, ${p.category?.id || 0})">Editar</button>
-            <button onclick="deleteProduct(${p.id})">Eliminar</button>
+            <button class="button edit" onclick="editProduct(${p.id}, '${p.name}', ${p.price}, ${p.category?.id || 0})">Editar</button>
+            <button class="button delete" onclick="deleteProduct(${p.id})">Eliminar</button>
         </td>
         `;
             tableBody.appendChild(row);
@@ -55,7 +63,7 @@ async function loadProducts() {
     }
 }
 
-// 🟨 Guardar o actualizar producto
+// Guardar o actualizar producto
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -89,7 +97,7 @@ form.addEventListener("submit", async (e) => {
     }
 });
 
-// 🟥 Eliminar producto
+// Eliminar producto
 (window as any).deleteProduct = async (id: number) => {
     if (!confirm("¿Seguro que querés eliminar este producto?")) return;
     try {
@@ -101,7 +109,7 @@ form.addEventListener("submit", async (e) => {
     }
 };
 
-// 🟩 Editar producto
+// Editar producto
 (window as any).editProduct = (id: number, name: string, price: number, categoryId: number) => {
     const idInput = document.querySelector("#id") as HTMLInputElement;
     const nameInput = document.querySelector("#name") as HTMLInputElement;

@@ -1,11 +1,19 @@
 export {}; 
+import { checkAuth, logout } from "../../utils/auth";
 
-const API_URL = "http://localhost:8080/api/categories";
+checkAuth("admin");
+
+const API_URL = import.meta.env.VITE_API_URL_CATEGORIES;
 
 const form = document.getElementById("categoryForm") as HTMLFormElement;
 const tableBody = document.getElementById("categoriesTable") as HTMLTableSectionElement;
 const nameInput = document.getElementById("name") as HTMLInputElement;
 const idInput = document.getElementById("categoryId") as HTMLInputElement;
+const logoutBtn = document.getElementById("logoutBtn") as HTMLButtonElement;
+
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", logout);
+}
 
 async function loadCategories() {
     const res = await fetch(API_URL);
@@ -18,8 +26,8 @@ async function loadCategories() {
         <td>${cat.id}</td>
         <td>${cat.name}</td>
         <td>
-        <button onclick="editCategory(${cat.id}, '${cat.name}')">Editar</button>
-        <button onclick="deleteCategory(${cat.id})">Eliminar</button>
+        <button class="button edit" onclick="editCategory(${cat.id}, '${cat.name}')">Editar</button>
+        <button class="button delete" onclick="deleteCategory(${cat.id})">Eliminar</button>
         </td>
     `;
         tableBody.appendChild(row);

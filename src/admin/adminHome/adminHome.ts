@@ -6,13 +6,12 @@ if (!user || user.role !== "ADMIN") {
 } */
 
 
-import { checkAuth } from "../../utils/auth";
+import { checkAuth, logout } from "../../utils/auth";
 
 checkAuth("admin"); // Solo admin puede acceder
 
 const logoutBtn = document.getElementById("logoutBtn") as HTMLButtonElement;
-logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("user");
-    alert("Cerrando sesion");
-    window.location.href = "../../auth/login/login.html";
-});
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", logout);
+}
+

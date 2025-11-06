@@ -1,177 +1,71 @@
-import { apiFetch } from '../../utils/api';
-import { checkAuth } from '../../utils/auth.ts';
-import { navigateTo } from '../../../utils/navigate';
-import { renderNavbar, updateCartBadge } from '../../../components/Navbar/Navbar';
-import { addToCart } from '../../../utils/cart';
-import { IProduct } from '../../../types/IProduct';
+import { checkAuth } from "../../utils/auth";
+import { getProductById } from "../../utils/api";
+import { addToCart } from "../../utils/cart";
 
-// --- Variables Globales ---
-let currentProduct: IProduct | null = null;
-let currentQuantity: number = 1;
+checkAuth("client");
 
-// --- Elementos del DOM ---
-let loader: HTMLDivElement;
-let content: HTMLDivElement;
-let productImage: HTMLImageElement;
-let productName: HTMLHeadingElement;
-let productStatus: HTMLSpanElement;
-let productDesc: HTMLParagraphElement;
-let productStock: HTMLParagraphElement;
-let productPrice: HTMLParagraphElement;
-let quantityInput: HTMLInputElement;
-let quantityDecreaseBtn: HTMLButtonElement;
-let quantityIncreaseBtn: HTMLButtonElement;
-let addToCartBtn: HTMLButtonElement;
-let confirmMessage: HTMLParagraphElement;
-let backBtn: HTMLButtonElement;
+// Insertar navbar
+const navbarContainer = document.getElementById("navbar")!;
+fetch("../../client/layouts/navbar.html")
+    .then(r => r.text())
+    .then(html => (navbarContainer.innerHTML = html));
 
-// --- INICIALIZACIÓN ---
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Proteger ruta y renderizar Navbar
-    checkAuth(['cliente', 'admin']);
-    renderNavbar();
+const container = document.getElementById("product-container")!;
 
-    // 2. Obtener elementos del DOM
-    loader = document.getElementById('product-loader') as HTMLDivElement;
-    content = document.getElementById('product-content') as HTMLDivElement;
-    productImage = document.getElementById('product-image') as HTMLImageElement;
-    productName = document.getElementById('product-name') as HTMLHeadingElement;
-    productStatus = document.getElementById('product-status') as HTMLSpanElement;
-    productDesc = document.getElementById('product-desc') as HTMLParagraphElement;
-    productStock = document.getElementById('product-stock') as HTMLParagraphElement;
-    productPrice = document.getElementById('product-price') as HTMLParagraphElement;
-    quantityInput = document.getElementById('quantity-input') as HTMLInputElement;
-    quantityDecreaseBtn = document.getElementById('quantity-decrease') as HTMLButtonElement;
-    quantityIncreaseBtn = document.getElementById('quantity-increase') as HTMLButtonElement;
-    addToCartBtn = document.getElementById('add-to-cart-btn') as HTMLButtonElement;
-    confirmMessage = document.getElementById('confirm-message') as HTMLParagraphElement;
-    backBtn = document.getElementById('back-btn') as HTMLButtonElement;
+// Obtener ID desde URL
+const params = new URLSearchParams(window.location.search);
+const productId = Number(params.get("id"));
 
-    // 3. Cargar datos del producto
-    loadProductDetails();
-
-    // 4. Conectar eventos
-    addEventListeners();
-});
-
-// --- LÓGICA DE CARGA ---
-function getProductIdFromUrl(): number | null {
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
-    if (id) {
-        return Number(id);
-    }
-    return null;
+if (!productId) {
+    container.innerHTML = `<div class="alert alert-danger">Producto no encontrado</div>`;
 }
 
-async function loadProductDetails() {
-    const productId = getProductIdFromUrl();
-    if (!productId) {
-        loader.textContent = 'Error: No se especificó un producto.';
-        return;
-    }
+async function loadProduct() {
+    try {
+        const p = await getProductById(productId);
 
-    // Llamamos al endpoint de backend: /api/products/{id}
-    const response = await apiFetch<IProduct>(`/products/${productId}`);
+        container.innerHTML = `
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="${p.imageUrl}" class="product-img shadow" />
+                </div>
 
-    if (response.error || !response.data) {
-        loader.textContent = 'Error: Producto no encontrado.';
-        return;
-    }
+                <div class="col-md-6">
+                    <h2 class="text-success fw-bold">${p.name}</h2>
+                    <h4 class="text-muted">${p.category?.name || "Sin categoría"}</h4>
 
-    currentProduct = response.data;
-    renderProductDetails();
+                    <p class="mt-3">${p.description || "Sin descripción"}</p>
 
-    // Ocultar loader y mostrar contenido
-    loader.style.display = 'none';
-    content.style.display = 'flex'; // Usamos flex para el layout
-}
+                    <h3 class="text-success fw-bold mt-3">$${p.price}</h3>
 
-// --- RENDERIZADO ---
-function renderProductDetails() {
-    if (!currentProduct) return;
+                    <p class="mt-2 ${
+                        p.stock === 0 ? "text-danger" : "text-success"
+                    } fw-bold">
+                        Stock: ${p.stock}
+                    </p>
 
-    productImage.src = currentProduct.imagenUrl;
-    productName.textContent = currentProduct.nombre;
-    productDesc.textContent = currentProduct.descripcion;
-    productPrice.textContent = `$${currentProduct.precio.toFixed(2)}`;
-    [cite_start]productStock.textContent = `Stock disponible: ${currentProduct.stock}`;[cite: 209]
+                    <button id="add-cart" class="btn btn-success mt-3"
+                        ${p.stock === 0 ? "disabled" : ""}>
+                        <i class="bi bi-cart-plus"></i> Agregar al carrito
+                    </button>
+                </div>
+            </div>
+        `;
 
-    [cite_start]// Validaciones de stock y estado [cite: 216, 218]
-    const isAvailable = currentProduct.disponible && currentProduct.stock > 0;
+        // Botón agregar carrito
+        const btn = document.getElementById("add-cart")!;
+        btn.addEventListener("click", () => {
+            addToCart(p);
+            alert("Producto agregado al carrito");
+        });
 
-    if (isAvailable) {
-        productStatus.textContent = 'Disponible';
-        productStatus.className = 'badge badge-success';
-        addToCartBtn.disabled = false;
-        quantityInput.disabled = false;
-        quantityIncreaseBtn.disabled = false;
-        quantityDecreaseBtn.disabled = false;
-    } else {
-        productStatus.textContent = 'No Disponible';
-        productStatus.className = 'badge badge-danger';
-        addToCartBtn.disabled = true; // No permite agregar si no hay stock o está inactivo
-        addToCartBtn.textContent = 'No disponible';
-        quantityInput.disabled = true;
-        quantityIncreaseBtn.disabled = true;
-        quantityDecreaseBtn.disabled = true;
+    } catch (err) {
+        container.innerHTML = `
+            <div class="alert alert-danger mt-5">
+                Error cargando producto
+            </div>
+        `;
     }
 }
 
-// --- MANEJO DE EVENTOS ---
-function addEventListeners() {
-    // Botón Volver
-    backBtn.addEventListener('click', () => {
-        navigateTo('/src/pages/store/home/home.html');
-    });
-
-    // Control de Cantidad
-    quantityIncreaseBtn.addEventListener('click', () => handleQuantityChange(1));
-    quantityDecreaseBtn.addEventListener('click', () => handleQuantityChange(-1));
-    quantityInput.addEventListener('change', () => handleQuantityChange(0));
-
-    // Agregar al Carrito
-    addToCartBtn.addEventListener('click', handleAddToCart);
-}
-
-function handleQuantityChange(change: number) {
-    if (!currentProduct) return;
-
-    // Actualiza el valor (si change es 0, lee el input)
-    currentQuantity = (change === 0) ? parseInt(quantityInput.value) : currentQuantity + change;
-
-    // Validaciones
-    if (currentQuantity < 1) {
-        currentQuantity = 1;
-    }
-
-    [cite_start]// No permite cantidad mayor al stock disponible [cite: 217]
-    if (currentQuantity > currentProduct.stock) {
-        currentQuantity = currentProduct.stock;
-        confirmMessage.textContent = 'No puedes seleccionar más que el stock disponible.';
-        confirmMessage.className = 'error-text';
-    } else {
-        confirmMessage.textContent = ''; // Limpiar error de stock
-    }
-
-    quantityInput.value = currentQuantity.toString();
-}
-
-function handleAddToCart() {
-    if (!currentProduct || currentQuantity === 0) return;
-
-    // 1. Usar la utilidad del carrito
-    addToCart(currentProduct, currentQuantity);
-
-    // 2. Actualizar el badge del navbar
-    updateCartBadge();
-
-    [cite_start]// 3. Mostrar mensaje de confirmación [cite: 213]
-    confirmMessage.textContent = `¡"${currentProduct.nombre}" (x${currentQuantity}) agregado al carrito!`;
-    confirmMessage.className = 'confirm-text';
-
-    // Ocultar mensaje después de 3 segundos
-    setTimeout(() => {
-        confirmMessage.textContent = '';
-    }, 3000);
-}
+loadProduct();

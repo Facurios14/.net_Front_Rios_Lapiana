@@ -1,27 +1,24 @@
-import { updateCartCount } from "../../utils/cart";
-import { API_URL_PRODUCTS, API_URL_CATEGORIES } from "../../utils/api";
-import { checkAuth } from "../../utils/auth";
+import { checkAuth, logout } from "../../utils/auth";
 
-// Verifica login de cliente
+const API_URL_CATEGORIES = import.meta.env.VITE_API_URL_CATEGORIES;
+const API_URL_PRODUCTS = import.meta.env.VITE_API_URL_PRODUCTS;
+
+// login de cliente
 checkAuth("client");
 
-// Cargar navbar
-const navbar = document.getElementById("navbar")!;
-fetch("../../client/layouts/navbar.html")
-    .then((r) => r.text())
-    .then((html) => {
-        navbar.innerHTML = html;
-        updateCartCount();
-    });
+
 
 const catContainer = document.getElementById("categories-container")!;
 const prodContainer = document.getElementById("products-container")!;
+const logoutBtn = document.getElementById("logout-btn") as HTMLButtonElement;
+// Cerrar sesión
+if (logoutBtn) logoutBtn.addEventListener("click", logout);
 
 let categories: any[] = [];
 let products: any[] = [];
 let selectedCategory = 0;
 
-// ✅ Cargar categorías
+// Cargar categorías
 async function loadCategories() {
     const res = await fetch(API_URL_CATEGORIES);
     categories = await res.json();
@@ -49,14 +46,14 @@ async function loadCategories() {
     });
 }
 
-// ✅ Cargar productos
+// Cargar productos
 async function loadProducts() {
     const res = await fetch(API_URL_PRODUCTS);
     products = await res.json();
     renderProducts();
 }
 
-// ✅ Mostrar productos
+//  Mostrar productos
 function renderProducts() {
     prodContainer.innerHTML = "";
 

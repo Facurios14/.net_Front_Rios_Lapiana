@@ -1,22 +1,22 @@
 import { checkAuth, logout } from "../../utils/auth";
 import { getCart, removeFromCart, clearCart, updateCartCount } from "../../utils/cart";
+import * as bootstrap from 'bootstrap';
 
 checkAuth("client");
 
 const PRODUCTS_URL = import.meta.env.VITE_API_URL_PRODUCTS;
 const ORDER_URL = import.meta.env.VITE_API_URL_ORDERS;
-
-const navbarContainer = document.getElementById("navbar")!;
 const cartItemsDiv = document.getElementById("cart-items")!;
 const cartTotalEl = document.getElementById("cart-total")!;
 const checkoutBtn = document.getElementById("checkout-btn")!;
+const checkoutModalEl = document.getElementById('checkoutModal') as HTMLElement;
+const checkoutModal = new bootstrap.Modal(checkoutModalEl);
+const checkoutForm = document.getElementById('checkout-form') as HTMLFormElement;
+const modalTotal = document.getElementById('modal-total') as HTMLElement;
+const logoutBtn = document.getElementById("logout-btn") as HTMLButtonElement;
+// Cerrar sesión
+if (logoutBtn) logoutBtn.addEventListener("click", logout);
 
-// Cargar Navbar
-fetch("/src/client/layout/navbar.html")
-    .then(res => res.text())
-    .then(html => navbarContainer.innerHTML = html);
-
-// Renderizar carrito
 async function loadCart() {
     const cart = getCart();
     cartItemsDiv.innerHTML = "";
@@ -73,28 +73,86 @@ async function loadCart() {
     loadCart();
 };
 
-// Checkout (realizar pedido)
-checkoutBtn.addEventListener("click", async () => {
-    const cart = getCart();
+/// (Necesitarás importar Bootstrap al inicio de tu script si no lo tienes)
 
+// --- 1. Lógica del Botón "Realizar Pedido" ---
+// (Esto reemplaza tu 'checkoutBtn.addEventListener' anterior)
+checkoutBtn.addEventListener("click", () => {
+    const cart = getCart();
     if (cart.length === 0) {
         alert("Tu carrito está vacío");
         return;
     }
+    
+    // Mostramos el total en el modal
+    modalTotal.textContent = cartTotalEl.textContent;
+    
+    // ¡Abrimos el modal!
+    checkoutModal.show();
+});
 
-    const res = await fetch(ORDER_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(cart), // [{id, quantity}]
-    });
+// --- 2. Lógica del Formulario del Modal ---
+// (Esto es lo que realmente envía el pedido)
+checkoutForm.addEventListener("submit", async (e) => {
+    e.preventDefault(); // Evitamos que la página se recargue
 
-    if (res.ok) {
-        clearCart();
-        updateCartCount();
-        alert("✅ Pedido realizado con éxito");
-        window.location.href = "../orders/orders.html";
-    } else {
-        alert("❌ Error al procesar el pedido");
+    const cart = getCart();
+    const userString = localStorage.getItem('user');
+    
+    if (!userString || cart.length === 0) {
+        alert("Error: Sesión o carrito no encontrados.");
+        return;
+    }
+    
+    const user = JSON.parse(userString);
+
+    // Capturamos los datos del formulario
+    const phone = (document.getElementById('checkout-phone') as HTMLInputElement).value;
+    const address = (document.getElementById('checkout-address') as HTMLInputElement).value;
+    const paymentMethod = (document.getElementById('checkout-payment') as HTMLSelectElement).value;
+    const notes = (document.getElementById('checkout-notes') as HTMLTextAreaElement).value;
+
+    // Mapeamos el carrito
+    const orderItems = cart.map((item: any) => ({
+        productId: item.id,
+        quantity: item.quantity,
+    }));
+
+    // Construimos el DTO completo (OrderDTO)
+    const orderData = {
+        userId: user.id,
+        items: orderItems,
+        phone: phone,
+        address: address,
+        paymentMethod: paymentMethod,
+        notes: notes,
+        // El backend debe calcular el total y poner el status
+    };
+
+    // Ocultamos el modal y mostramos feedback de "cargando"
+    checkoutModal.hide();
+    alert("Procesando pedido..."); 
+
+    // --- 3. Llamada a la API (la que tenías antes, pero con más datos) ---
+    try {
+        const res = await fetch(ORDER_URL, { // ORDER_URL viene de tu .env
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(orderData), // ¡Enviamos el DTO completo!
+        });
+
+        if (res.ok) {
+            clearCart();
+            updateCartCount();
+            alert("✅ Pedido realizado con éxito");
+            window.location.href = "../home/home.html"; 
+        } else {
+            const errorData = await res.json();
+            alert(`❌ Error al procesar el pedido: ${errorData.message || 'Error desconocido'}`);
+        }
+    } catch (err) {
+        console.error("Error en el fetch:", err);
+        alert("❌ Error de conexión al realizar el pedido.");
     }
 });
 

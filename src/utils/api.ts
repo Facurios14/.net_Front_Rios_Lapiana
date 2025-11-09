@@ -1,10 +1,8 @@
-export const API_BASE = import.meta.env.VITE_API_URL;
-
 // ENDPOINTS CLIENTE
-export const API_URL_PRODUCTS = `${API_BASE}/products`;
-export const API_URL_CATEGORIES = `${API_BASE}/categories`;
-export const API_URL_ORDERS = `${API_BASE}/orders`;
-export const API_URL_USERS = `${API_BASE}/auth`;
+export const API_URL_PRODUCTS = import.meta.env.VITE_API_URL_PRODUCTS;
+export const API_URL_CATEGORIES = import.meta.env.VITE_API_URL_CATEGORIES;
+export const API_URL_ORDERS = import.meta.env.VITE_API_URL_ORDERS;
+export const API_URL_USERS = import.meta.env.VITE_API_URL_USERS;
 
 // Obtener un producto por ID
 export const getProductById = async (id: number) => {

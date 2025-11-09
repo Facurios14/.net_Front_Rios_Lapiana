@@ -1,16 +1,14 @@
-import { checkAuth } from "../../utils/auth";
+import { checkAuth, logout  } from "../../utils/auth";
 import { getProductById } from "../../utils/api";
 import { addToCart } from "../../utils/cart";
 
 checkAuth("client");
 
-// Insertar navbar
-const navbarContainer = document.getElementById("navbar")!;
-fetch("../../client/layouts/navbar.html")
-    .then(r => r.text())
-    .then(html => (navbarContainer.innerHTML = html));
 
 const container = document.getElementById("product-container")!;
+const logoutBtn = document.getElementById("logout-btn") as HTMLButtonElement;
+// Cerrar sesión
+if (logoutBtn) logoutBtn.addEventListener("click", logout);
 
 // Obtener ID desde URL
 const params = new URLSearchParams(window.location.search);
@@ -44,6 +42,11 @@ async function loadProduct() {
                         Stock: ${p.stock}
                     </p>
 
+                    <div class="input-group mb-3" style="max-width: 150px;">
+                        <span class="input-group-text">Cantidad:</span>
+                        <input type="number" id="quantity-input" class="form-control" 
+                                value="1" min="1" max="${p.stock}">
+                    </div>
                     <button id="add-cart" class="btn btn-success mt-3"
                         ${p.stock === 0 ? "disabled" : ""}>
                         <i class="bi bi-cart-plus"></i> Agregar al carrito
@@ -52,11 +55,27 @@ async function loadProduct() {
             </div>
         `;
 
-        // Botón agregar carrito
         const btn = document.getElementById("add-cart")!;
+        const quantityInput = document.getElementById("quantity-input") as HTMLInputElement;
+
         btn.addEventListener("click", () => {
-            addToCart(p);
-            alert("Producto agregado al carrito");
+            // Leemos la cantidad del input
+            const quantity = parseInt(quantityInput.value) || 1;
+
+            // Validamos contra el stock (aunque el 'max' del input ayuda)
+            if (quantity > p.stock) {
+                alert("No hay suficiente stock disponible.");
+                return;
+            }
+            if (quantity < 1) {
+                alert("Debe agregar al menos 1 unidad.");
+                return;
+            }
+
+            // Pasamos el producto Y la cantidad
+            addToCart(p, quantity); 
+
+            alert(`${quantity} ${p.name}(s) agregado(s) al carrito`);
         });
 
     } catch (err) {

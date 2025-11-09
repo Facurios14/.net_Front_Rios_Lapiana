@@ -1,13 +1,10 @@
-import { checkAuth } from "../../utils/auth";
-import { API_URL_CATEGORIES } from "../../utils/api";
+import { checkAuth, logout  } from "../../utils/auth";
 
 checkAuth("client");
-
-// INSERTAR NAVBAR
-const navbarContainer = document.getElementById("navbar")!;
-fetch("./src/client/layout.html")
-    .then(r => r.text())
-    .then(html => navbarContainer.innerHTML = html);
+const API_URL_CATEGORIES = import.meta.env.VITE_API_URL_CATEGORIES;
+const logoutBtn = document.getElementById("logout-btn") as HTMLButtonElement;
+// Cerrar sesión
+if (logoutBtn) logoutBtn.addEventListener("click", logout);
 
 // MOSTRAR CATEGORÍAS DESTACADAS
 const catContainer = document.getElementById("featured-categories")!;

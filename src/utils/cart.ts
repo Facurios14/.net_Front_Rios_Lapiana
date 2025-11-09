@@ -1,4 +1,4 @@
-
+//utils/cart.ts
 const sidebarToggle = document.getElementById("sidebarToggle");
 const sidebar = document.getElementById("sidebar");
 const mainContent = document.getElementById("main-content");
@@ -23,18 +23,18 @@ const saveCart = (cart: any[]) => {
     updateCartCount();
 };
 
-// ✅ Agregar un producto al carrito
-export const addToCart = (product: any) => {
+// ✅ Agregar un producto al carrito (ACTUALIZADO)
+export const addToCart = (product: any, quantityToAdd: number) => { // <-- 1. Acepta cantidad
     const cart = getCart();
 
     const item = cart.find((p: any) => p.id === product.id);
 
     if (item) {
-        item.quantity++;
+        item.quantity += quantityToAdd; // <-- 2. Suma la cantidad recibida
     } else {
         cart.push({
             ...product,
-            quantity: 1,
+            quantity: quantityToAdd, // <-- 3. Agrega con la cantidad recibida
         });
     }
 

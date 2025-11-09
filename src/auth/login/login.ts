@@ -32,7 +32,7 @@ if (form) {
                 if (user.role.toUpperCase() === "ADMIN") {
                     window.location.href = "../../admin/adminHome/adminHome.html";
                 } else {
-                    window.location.href = "cliente.html";
+                    window.location.href = "../../store/home/home.html";
                 }
             } else {
                 alert("Credenciales incorrectas");

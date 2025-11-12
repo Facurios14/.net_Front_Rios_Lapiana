@@ -10,8 +10,8 @@ import { checkAuth, logout } from "../../utils/auth";
 
 checkAuth("admin"); // Solo admin puede acceder
 
-const logoutBtn = document.getElementById("logoutBtn") as HTMLButtonElement;
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", logout);
-}
+const logoutBtn = document.getElementById("logout-btn") as HTMLButtonElement;
+// Cerrar sesión
+if (logoutBtn) logoutBtn.addEventListener("click", logout);
+
 

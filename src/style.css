@@ -20,6 +20,16 @@
     align-items: center;
 }
 
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #f8f9fa;
+}
+
+h2,
+h4 {
+    letter-spacing: 0.5px;
+}
+
 .card-custom {
     background-color: rgba(59, 59, 59, 0.9);
     border: none;
@@ -69,22 +79,6 @@
     border-radius: 50%;
 }
 
-/* ============================
-Estilos generales
-============================ */
-body {
-    font-family: "Poppins", sans-serif;
-    background-color: #f8f9fa;
-}
-
-h2,
-h4 {
-    letter-spacing: 0.5px;
-}
-
-/* ============================
-Navbar
-============================ */
 
 
 #logout-btn {
@@ -97,9 +91,7 @@ Navbar
     transform: scale(1.05);
 }
 
-/* ============================
-Sidebar
-============================ */
+/* ------------Sidebar----------*/
 
 
 aside h4 {
@@ -122,9 +114,41 @@ aside .nav-link.active {
     border-radius: 6px;
 }
 
-/* ============================
-Tabla principal
-============================ */
+/* sidebar cliente */
+.product-card {
+    transition: transform .2s;
+    cursor: pointer;
+}
+
+.product-card:hover {
+    transform: scale(1.03);
+}
+
+.product-img {
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.category-chip {
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #e8f5e9;
+    color: #2e7d32;
+    transition: .2s;
+}
+
+.category-chip:hover {
+    background: #c8e6c9;
+}
+
+.category-chip.active {
+    background: #2e7d32;
+    color: white;
+}
+
+/* ----------Tabla principal----------- */
 
 thead.table-success {
     background-color: #198754 !important;
@@ -144,9 +168,7 @@ td img:hover {
     transform: scale(1.05);
 }
 
-/* ============================
-Botones CRUD
-============================ */
+/* ----------Botones CRUD----------- */
 
 .btn-warning {
     background-color: #ffc107;
@@ -175,9 +197,7 @@ Botones CRUD
     background-color: #157347;
 }
 
-/* ============================
-Modal
-============================ */
+/* ----------Modal----------- */
 .modal-content {
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -282,9 +302,7 @@ Modal
     }
 }
 
-/* ============================
-Diseño Responsive
-============================ */
+/* ----------Diseño Responsive----------- */
 @media (max-width: 800px) {
     #sidebar {
         display: none !important;
@@ -295,7 +313,6 @@ Diseño Responsive
     }
 }
 
-/* 💻 Pantallas grandes (a partir de 992px) */
 @media (min-width: 800px) {
     #sidebar {
         display: block !important;

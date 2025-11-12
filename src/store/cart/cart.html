@@ -11,127 +11,179 @@
 
 <body class="bg-light">
 
-    <!-- Navbar -->
-    <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3">
-        <a class="navbar-brand text-success fw-bold" href="../home/home.html">
-            <span class="navbar-image text-success fw-bold">
-                <img src="../../imagenes/ChatGPT Image 30 oct 2025, 05_18_03 p.m..png" alt="Mi Logo de la Empresa"> FoodStore
-            </span>
-        </a>
+<!-- NAVBAR -->
+<nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3">
+    <a class="navbar-brand text-success fw-bold" href="../home/home.html">
+        <span class="navbar-image text-success fw-bold">
+            <img src="../../imagenes/ChatGPT Image 30 oct 2025, 05_18_03 p.m..png" alt="Mi Logo"> FoodStore
+        </span>
+    </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <div class="collapse navbar-collapse" id="navbarMenu">
-            <ul class="navbar-nav ms-auto">
+    <div class="collapse navbar-collapse" id="navbarMenu">
+        <ul class="navbar-nav ms-auto">
 
-                <li class="nav-item">
-                    <a class="nav-link" href="../store/store.html">
-                        <i class="bi bi-basket3"></i> Tienda
+            <li class="nav-item">
+                <a class="nav-link" href="../store/store.html">
+                    <i class="bi bi-basket3"></i> Tienda
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link active" href="../cart/cart.html">
+                    <i class="bi bi-cart-fill"></i> Carrito
+                    <span id="cart-count" class="badge bg-success ms-1"></span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="../../client/orders/orders.html">
+                    <i class="bi bi-receipt"></i> Mis pedidos
+                </a>
+            </li>
+
+            <li class="nav-item p-1">
+                <button id="logout-btn" class="btn btn-danger btn-sm">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                </button>
+            </li>
+
+        </ul>
+    </div>
+</nav>
+
+<!-- LAYOUT CON SIDEBAR -->
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- SIDEBAR CLIENTE -->
+        <aside class="col-md-3 col-lg-2 bg-white border-end vh-100 p-3">
+            <h4 class="text-primary fw-bold mb-4 text-center">Mi Cuenta</h4>
+
+            <ul class="nav flex-column">
+                <li class="nav-item mb-2">
+                    <a href="../home/home.html" class="nav-link text-primary">
+                        <i class="bi bi-person-circle"></i> Home
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="../cart/cart.html">
-                        <i class="bi bi-cart-fill"></i> Carrito
-                        <span id="cart-count" class="badge bg-success ms-1"></span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="../../client/orders/orders.html">
+                <li class="nav-item mb-2">
+                    <a href="../../client/orders/orders.html" class="nav-link text-primary">
                         <i class="bi bi-receipt"></i> Mis pedidos
                     </a>
                 </li>
 
-                <li class="nav-item p-1">
-                    <button id="logout-btn" class="btn btn-danger btn-sm">
+                <li class="nav-item mb-2">
+                    <a href="../cart/cart.html" class="nav-link active text-primary fw-semibold">
+                        <i class="bi bi-cart3"></i> Mi carrito
+                    </a>
+                </li>
+
+                <li class="nav-item mb-2">
+                    <a href="../store/store.html" class="nav-link text-primary">
+                        <i class="bi bi-chat-quote"></i> Tienda
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <button id="logout-btn" class="btn btn-danger w-100">
                         <i class="bi bi-box-arrow-right"></i> Cerrar sesión
                     </button>
                 </li>
-
             </ul>
-        </div>
-    </nav>
+        </aside>
 
-    <div class="container py-4">
+        <!-- MAIN CONTENT -->
+        <main class="col-md-9 col-lg-10 p-4">
 
-        <h2 class="fw-bold text-success mb-4">Mi Carrito</h2>
+            <h2 class="fw-bold text-success mb-4">Mi Carrito</h2>
 
-        <div class="row">
-            <!-- Lista de productos -->
-            <div class="col-lg-8">
-                <div id="cart-items"></div>
-            </div>
-
-            <!-- Resumen -->
-            <div class="col-lg-4">
-                <div class="card shadow-sm p-3">
-                    <h4 class="fw-bold text-success">Resumen</h4>
-                    <hr>
-                    <p class="fs-5">
-                        Total: <span id="cart-total" class="fw-bold">$0</span>
-                    </p>
-                    <button id="checkout-btn" class="btn btn-success w-100">
-                        <i class="bi bi-send-check"></i> Realizar Pedido
-                    </button>
+            <div class="row">
+                <!-- PRODUCTOS -->
+                <div class="col-lg-8">
+                    <div id="cart-items"></div>
                 </div>
-            </div>
-        </div>
 
-    </div>
-    <div class="modal fade" id="checkoutModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title">Completar Pedido</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                
-                <form id="checkout-form">
-                    <div class="modal-body">
-                        <p class="fs-5">Total a pagar: <span id="modal-total" class="fw-bold text-success">$0.00</span></p>
+                <!-- RESUMEN -->
+                <div class="col-lg-4">
+                    <div class="card shadow-sm p-3">
+                        <h4 class="fw-bold text-success">Resumen</h4>
                         <hr>
-                        
-                        <div class="mb-3">
-                            <label for="checkout-phone" class="form-label">Teléfono</label>
-                            <input type="tel" class="form-control" id="checkout-phone" placeholder="Ej: +54 9 261..." required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="checkout-address" class="form-label">Dirección de Entrega</label>
-                            <input type="text" class="form-control" id="checkout-address" placeholder="Ej: Calle Falsa 123, Ciudad" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="checkout-payment" class="form-label">Método de Pago</label>
-                            <select class="form-select" id="checkout-payment" required>
-                                <option value="">Seleccione un método...</option>
-                                <option value="Efectivo">Efectivo (al recibir)</option>
-                                <option value="Transferencia">Transferencia</option>
-                                <option value="MercadoPago">MercadoPago (simulado)</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="checkout-notes" class="form-label">Notas Adicionales (opcional)</label>
-                            <textarea class="form-control" id="checkout-notes" rows="2" placeholder="Ej: sin cebolla, timbre no funciona..."></textarea>
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-success">
-                            <i class="bi bi-send-check"></i> Confirmar Pedido
+                        <p class="fs-5">
+                            Total: <span id="cart-total" class="fw-bold">$0</span>
+                        </p>
+                        <button id="checkout-btn" class="btn btn-success w-100">
+                            <i class="bi bi-send-check"></i> Realizar Pedido
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
+
+        </main>
+
+    </div>
+</div>
+
+<!-- MODAL CHECKOUT -->
+<div class="modal fade" id="checkoutModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Completar Pedido</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form id="checkout-form">
+                <div class="modal-body">
+                    <p class="fs-5">
+                        Total a pagar: <span id="modal-total" class="fw-bold text-success">$0.00</span>
+                    </p>
+                    <hr>
+
+                    <div class="mb-3">
+                        <label class="form-label">Teléfono</label>
+                        <input type="tel" class="form-control" id="checkout-phone" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="checkout-address" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Pago</label>
+                        <select class="form-select" id="checkout-payment" required>
+                            <option value="">Seleccione...</option>
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Transferencia">Transferencia</option>
+                            <option value="MercadoPago">MercadoPago</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Notas</label>
+                        <textarea class="form-control" id="checkout-notes" rows="2"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-send-check"></i> Confirmar Pedido
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
-    <script type="module" src="./cart.ts"></script>
-    <script type="module" src="./checkout.ts"></script>
+<script type="module" src="./cart.ts"></script>
+<script type="module" src="./checkout.ts"></script>
+
 </body>
 </html>
+
